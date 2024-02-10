@@ -1,0 +1,18 @@
+import React from 'react'
+import { FaTrashAlt } from 'react-icons/fa';
+import LineItem from './LineItem.js';
+
+export default function ItemList({items, handleCheck, handleDelete}) {
+  return (
+    <ul>
+        {items.map((item) => (
+            <LineItem
+                key = {item.id}
+                item = {item}
+                handleCheck = {handleCheck}
+                handleDelete = {handleDelete}
+            />
+        ))}
+    </ul>
+  )
+}
