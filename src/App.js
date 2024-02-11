@@ -2,39 +2,38 @@ import Header from './Header';
 import AddItem from './AddItem';
 import Content from'./Content';
 import Footer from './Footer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SearchItem from './SearchItem';
 
 
   function App() {
 
-    const [items, setItems] = useState(JSON.parse(localStorage.getItem('shoppinglist')));
+    const [items, setItems] = useState(JSON.parse(localStorage.getItem('shoppinglist')) || []);
     
     const [newItem, setNewItem] = useState('');
 
     const [search, setSearch] = useState('');
 
-    const setAndSaveItems = (newItems)=> {
-      setItems(newItems);
-      localStorage.setItem('shoppinglist', JSON.stringify(newItems));
-    }
+    useEffect(() => {
+      localStorage.setItem('shoppinglist', JSON.stringify(items));
+    }, [items])
 
     const addItem = (item)=> {
       const id = items.length ? items[items.length - 1].id + 1 : 1;
       const myNewItem = {id, checked: false, item};
       const listItems = [...items, myNewItem];
-      setAndSaveItems(listItems);
+      setItems(listItems);
     }
     
     const handleCheck = (id) => {
     //console.log(`key: ${id}`)
     const listItems = items.map((item) => item.id === id ? { ...item, checked: !item.checked } : item);
-    setAndSaveItems(listItems);
+    setItems(listItems);
     }
     
     const handleDelete = (id) => {
     const listItems = items.filter((item) => item.id !== id);
-    setAndSaveItems(listItems);
+    setItems(listItems);
     }
 
     const handleSubmit = (e)=> {
@@ -88,6 +87,18 @@ items.filter(item => ...): This is using the filter method of the items array. T
 .includes(search.toLowerCase()): This is checking if the lowercase item string includes the lowercase search string. The includes method determines whether one string may be found within another string, returning true or false as appropriate.
 
 So, overall, this line of code is creating a new array of items that include the search term, ignoring case.
+
+    useEffect(() => {
+      console.log('load time')
+    }, []) Explaination:- 
+
+useEffect(() => {...}, []): The useEffect hook takes two arguments. The first argument is a function where you can put your side effect code. The second argument is an array of dependencies.
+
+console.log('load time'): This is the side effect that will be run. In this case, it's just logging the string 'load time' to the console.
+
+[]: This is the dependency array. When any of the values in this array change, the function in the first argument will be run again. In this case, the array is empty, which means the side effect will only run once after the component is first rendered (similar to componentDidMount in class components). If you wanted the effect to run every time the component re-renders, you would omit the second argument entirely.
+
+useEffect is async in nature and runs after the component is rendered
 
 
 */
